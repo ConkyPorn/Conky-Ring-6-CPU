@@ -1,0 +1,102 @@
+conky.config = {
+	own_window = true,
+	own_window_transparent = true,
+	own_window_class = 'conky',
+	own_window_argb_visual = true,
+        own_window_argb_value = E6000000,
+	own_window_hints = 'undecorated,below,sticky,skip_taskbar,skip_pager',
+	background = false,
+
+	use_xft = true,
+	font = 'Technical CE:bold:size=10',
+
+	xftalpha = 0.8,
+	text_buffer_size = 2048,
+	update_interval = 0.5,
+	total_run_times = 0,
+
+	max_user_text = 18384,
+	double_buffer = true,
+	minimum_width = 280, minimum_height = 1080,
+	maximum_width = 320,
+
+-- Misc Console #
+        out_to_console = false,
+        out_to_stderr = false,
+        extra_newline = false,
+
+	draw_graph_borders = false,
+	draw_shades = false,
+	draw_outline = false,
+	draw_borders = false,
+	stippled_borders = 2,
+
+	default_color = 'white',
+     -- own_window_colour = 'white',
+
+	alignment = 'top_right',
+
+	gap_x = 0,
+	gap_y = 0,
+
+	no_buffers = true,
+
+	uppercase = false,
+
+	cpu_avg_samples = 1,
+
+	net_avg_samples = 1,
+	override_utf8_locale = true,
+
+	use_spacer = 'none',
+	short_units = true,
+
+	lua_load = '~/.conky/conky_ring-6cpu.lua',
+	lua_draw_hook_pre = 'main',
+
+};
+
+conky.text = [[
+${font Technical CE:bold:size=12}${alignc}SYSTEM:${font} ${execi 3600 /bin/cat /etc/*release* | grep PRETTY_NAME | cut -c 14-29}
+${alignc}${exec cat /proc/cpuinfo|grep 'model name'|sed -e 's/model name.*: //'| uniq | cut -c 1-32}
+${alignc}$kernel${voffset 3}
+${alignc}${freq_g 4} ${font}GHz${voffset 3}
+${alignc}${uptime}${font} UPTIME${voffset 3}
+${hr 2}
+${voffset 20}
+${goto 35}${execi 5 sensors|grep 'Core 0'| awk -F'+' '{print $2}' | awk -F'.' '{print $1}'} °C ${goto 130}${execi 5 sensors|grep 'Core 1'| awk -F'+' '{print $2}' | awk -F'.' '{print $1}'} °C ${goto 225}${execi 5 sensors|grep 'Core 2'| awk -F'+' '{print $2}' | awk -F'.' '{print $1}'} °C
+${voffset 40}
+${goto 35}${execi 5 sensors|grep 'Core 3'| awk -F'+' '{print $2}' | awk -F'.' '{print $1}'} °C ${goto 130}${execi 5 sensors|grep 'Core 4'| awk -F'+' '{print $2}' | awk -F'.' '{print $1}'} °C ${goto 225}${execi 5 sensors|grep 'Core 5'| awk -F'+' '{print $2}' | awk -F'.' '{print $1}'} °C
+${voffset 40}
+${alignr}Top Processes
+${alignr}${scroll 15 ${top name 1}}
+${alignr}${scroll 15 ${top name 2}}
+${alignr}${scroll 15 ${top name 3}}
+${alignr}${scroll 15 ${top name 4}}
+${voffset -30}${goto 55}Disc Useage
+${voffset 38}${goto 110}${font}Home ${fs_used /home} used
+${goto 110}System ${fs_used /} used
+${voffset -10}
+${voffset 20}$mem of $memmax Total
+${scroll 15 ${top_mem name 1}}
+${scroll 15 ${top_mem name 2}}
+${scroll 15 ${top_mem name 3}}${goto 165}Memory
+${scroll 15 ${top_mem name 4}}${goto 165}Useage
+${voffset 50}
+${goto 60}${font xftfont monospace:size=8}${upspeedf bond0} kb/s${alignc}${voffset -5}${goto 130}${font xftfont monospace:size=12}${totalup bond0}${font}  Total Up
+${voffset 75}${font xftfont monospace:size=12}${totaldown bond0}${font}  Total Down${goto 140}${font xftfont monospace:size=8}${downspeedf bond0} kb/s${alignr} 
+${voffset 30}
+${hr 2}
+${font Technical CE:bold:size=12}NVIDIA:${font}${alignr}GPU1: ${exec nvidia-settings -t -q [gpu:0]/GPUCoreTemp} °C  GPU2: ${exec nvidia-settings -t -q [gpu:1]/GPUCoreTemp} °C
+${hr 2}
+Wan:${goto 38}${execi 3600 wget -q -O - checkip.dyndns.org | sed -e 's/[^[:digit:]\|.]//g'}
+Lan:${goto 38}${addr bond0}
+Open Ports:${goto 80}${tcp_portmon 1 65535 count}
+${hr 2}
+Top 5 Open Ports
+IP:${goto 30}${tcp_portmon 1 65535 rip  0}
+${goto 30}${tcp_portmon 1 65535 rip  1}
+${goto 30}${tcp_portmon 1 65535 rip  2}
+${goto 30}${tcp_portmon 1 65535 rip  3}
+${goto 30}${tcp_portmon 1 65535 rip  4}
+]];
