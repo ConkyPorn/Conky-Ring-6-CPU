@@ -1,0 +1,1 @@
+# Conky-Ring-6-CPU
